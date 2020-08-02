@@ -1,3 +1,4 @@
+// PowerShellは入力リダイレクトに対応していない
 
 void func(){
 
