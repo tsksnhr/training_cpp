@@ -1,6 +1,7 @@
 #include "all.h"
 
 // pred関数の実装
+// pred1, pred2のifがtrueでない時、戻り値が不定となる
 auto pred1(int a){
     if(a == 5){
         std::cerr << "called" << std::endl;
