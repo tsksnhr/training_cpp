@@ -11,7 +11,6 @@ auto my_count(auto first, auto last, auto value){
     return cnt;
 }
 
-// test用main関数
 int main(){
 
     std::vector<int> v = {1, 1, 2, 1, 2};
