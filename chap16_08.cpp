@@ -1,5 +1,8 @@
 #include "all.h"
 
+// global変数
+int tgt = 3;
+
 // 自作find_if関数の実装
 auto my_find_if(auto first, auto last, auto pred){
 
@@ -10,21 +13,21 @@ auto my_find_if(auto first, auto last, auto pred){
     return last;
 }
 
-// find_ifによるfindの実装がしたいが・・・
+// find_ifによるfindの実装
+auto my_find(auto first, auto last, auto num){
+
+    auto temp_func = [&](auto tgt){if(tgt == num) return true; return false;};
+
+    return my_find_if(first, last, temp_func);
+}
+
 int main(){
 
     std::vector<int> v = {1, 3, 5, 7, 9};
     int tgt = 3;
-
-    auto my_find(auto first, auto last, auto num){
-
-        auto temp_func = [&](auto tgt){if(tgt == num) return true; return false;};
-
-        if(my_find_if(first, last, temp_func(tgt))) return iter;
-    }
     
     auto pos = my_find(std::begin(v), std::end(v), tgt);
-    if(*pos != std::end(v)) std::cout << "find" << std::endl;
+    if(*pos == 3) std::cout << "find" << std::endl;
     else std::cout << "nothing" << std::endl;
 
     return 0;
