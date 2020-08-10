@@ -1,4 +1,4 @@
-// 演算子オーバーロード
+// 演算子オーバーロード(二項演算子)
 
 #include "all.h"
 
@@ -29,7 +29,7 @@ Fraction operator +(Fraction l, Fraction r){
     }
 }
 Fraction operator -(Fraction l, Fraction r){
-    
+
     if(l.demon == r.demon){
         return Fraction(l.num - r.num, l.demon);
     }
