@@ -12,6 +12,7 @@ bool pred1(double a, double b){
 
 
 // 自作equalの実装
+// ただし下記の実装は効率的ではないらしい
 auto my_equal(auto first1, auto last1, auto first2, auto last2){
 
     auto size1 = last1 - first1;
