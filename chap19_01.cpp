@@ -15,7 +15,7 @@ struct TestClass{
 
     // デストラクタ
     ~TestClass(){
-        std::cout << "Denstructed :"s << a << " " << "Constructed :"s << b << std::endl;
+        std::cout << "Destructed :"s << a << " " << "Constructed :"s << b << std::endl;
     }
 };
 
