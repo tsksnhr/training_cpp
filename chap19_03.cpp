@@ -20,12 +20,13 @@ struct TestClass{
 
 // 演算子オーバーロード(前置演算子)
 // 前置演算子を評価すると演算後の値となる
-TestClass operator ++(TestClass &tc){
+// 戻り値をreferanceで返す
+TestClass & operator ++(TestClass &tc){
     ++tc.a;
     ++tc.b;
     return tc;
 };
-TestClass operator --(TestClass &tc){
+TestClass & operator --(TestClass &tc){
     --tc.a;
     --tc.b;
     return tc;
@@ -57,8 +58,7 @@ int main(){
 
     ++tc;
     std::cout << tc.a << " " << tc.b << std::endl;      // 11 21
-    --tc;
-    --tc;
+    ----tc;
     std::cout << tc.a << " " << tc.b << std::endl;      // 9 19
 
     tc++;
