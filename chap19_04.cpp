@@ -17,7 +17,8 @@ struct TestClass{
     TestClass operator +(TestClass tc){
         return TestClass{ a + tc.a };
     }
-    TestClass operator ++(){
+    // classない演算子オーバーロードで前置演算子を実装するには・・・？
+    TestClass & operator ++(){
         ++a;
         return TestClass{ a };
     }
