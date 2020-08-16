@@ -1,2 +1,2 @@
-This repogitory is for only me. log og c++ studying.
+This repogitory is for only me. Study-log of c++.
 Reference is "江添亮のC++入門".
