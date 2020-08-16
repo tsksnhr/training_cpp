@@ -13,6 +13,7 @@ struct my_array{
     using const_reference = T const &;
     using data_size = std::size_t;
     //  イテレータに対するエイリアス
+    //  ここのエラーが解決できない
     using iterator = my_array_iterator<my_array>;
 
     //  operator overload
