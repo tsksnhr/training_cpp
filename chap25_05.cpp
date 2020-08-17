@@ -28,6 +28,18 @@ struct My_array_iterator{
         --pos;
         return *this;
     }
+    //  後置演算子
+    //  イテレータは加算されるが式を評価すると加算する前の値となる
+    My_array_iterator operator ++(int dummy){
+        My_array_iterator temp = *this;
+        ++*this;
+        return temp;
+    }
+    My_array_iterator operator --(int dummy){
+        My_array_iterator temp = *this;
+        --*this;
+        return temp;
+    }
 };
 
 //  class template
@@ -73,6 +85,10 @@ int main(){
     auto iter2 = data.end();
     --iter2;
     std::cout << *iter2 << std::endl;    // 3
+
+    auto iter3 = data.begin();
+    std::cout << *(iter3++) << std::endl;   //  1
+    std::cout << *(iter3++) << std::endl;   //  2
 
     return 0;
 }
