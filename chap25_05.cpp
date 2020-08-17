@@ -31,11 +31,13 @@ struct My_array_iterator{
     //  後置演算子
     //  イテレータは加算されるが式を評価すると加算する前の値となる
     My_array_iterator operator ++(int dummy){
+        //  tempにthisポインタの実体をコピー
         My_array_iterator temp = *this;
         ++*this;
         return temp;
     }
     My_array_iterator operator --(int dummy){
+        //  tempにthisポインタの実体をコピー
         My_array_iterator temp = *this;
         --*this;
         return temp;
