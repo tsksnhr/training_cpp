@@ -42,6 +42,18 @@ struct My_array_iterator{
         --*this;
         return temp;
     }
+
+    //  比較演算子
+    //  イテレータとイテレータを比較する、戻り値はbool値
+    //  引数をconstなリファレンスとする理由は、不要なコピーを防ぐため
+    bool operator ==(My_array_iterator const &data_arg){
+        //  引数のデータメンバにアクセス
+        return pos == data_arg.pos;
+    }
+    bool operator !=(My_array_iterator const &data_arg){
+        //  引数のデータメンバにアクセス
+        return pos != data_arg.pos;
+    }
 };
 
 //  class template
@@ -91,6 +103,20 @@ int main(){
     auto iter3 = data.begin();
     std::cout << *(iter3++) << std::endl;   //  1
     std::cout << *(iter3++) << std::endl;   //  2
+
+    auto iter_l = data.begin();
+    auto iter_r = data.begin();
+    std::cout << std::boolalpha;
+    bool flg;
+    flg = (iter_l == iter_r);
+    std::cout << flg << std::endl;      //  true
+    flg = (iter_l != iter_r);
+    std::cout << flg << std::endl;      //  false
+    ++iter_l;
+    flg = (iter_l == iter_r);
+    std::cout << flg << std::endl;      //  false
+    flg = (iter_l != iter_r);
+    std::cout << flg << std::endl;      //  true
 
     return 0;
 }
