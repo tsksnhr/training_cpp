@@ -54,6 +54,22 @@ struct My_array_iterator{
         //  引数のデータメンバにアクセス
         return pos != data_arg.pos;
     }
+
+    //  イテレータに対する加算代入演算子
+    //  イテレータに対する値の書き換えを実施するため、戻り値はmy_array_iterator &になる
+    //  *で実体にアクセスできるイテレータを返す必要があるため、戻り値は*thisを使う
+    My_array_iterator & operator +=(std::size_t num_arg){
+        //  My_array_iteratorのメンバ変数であるposに対して加算を実施する
+        pos += num_arg;
+        return *this;
+    }
+    //  加算演算子
+    //  メンバ関数として演算子をオーバーロードした場合、最初のオペランドはクラスオブジェクト、2個目のオブジェクトは第一引数
+    My_array_iterator operator +(std::size_t num_arg){
+        My_array_iterator temp = *this;     //  *thisはクラスオブジェクトへのリファレンス（つまりポインタ？）
+        temp += num_arg;
+        return temp;
+    }
 };
 
 //  class template
@@ -117,6 +133,16 @@ int main(){
     std::cout << flg << std::endl;      //  false
     flg = (iter_l != iter_r);
     std::cout << flg << std::endl;      //  true
+
+    for(auto iter = data.begin(); iter != data.end(); ++iter) std::cout << *iter << " "s;
+    std::cout << std::endl;
+
+    auto iter4 = data.begin();
+    iter4 += 2;
+    std::cout << *iter4 << std::endl;   //  3
+
+    auto iter5 = data.begin() + 1;
+    std::cout << *iter5 << std::endl;   //  2
 
     return 0;
 }
