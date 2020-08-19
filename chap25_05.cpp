@@ -13,11 +13,14 @@ struct My_array_iterator{
         // None
     }
 
+
     //  演算子オーバーロード
     //  配列要素へのリファレンスを返すから戻り値はArray::reference
     typename Array::reference operator *(){
         return data[pos];
     }
+
+
     //  前置演算子
     //  戻り値はイテレータへのリファレンス
     My_array_iterator & operator ++(){
@@ -28,6 +31,8 @@ struct My_array_iterator{
         --pos;
         return *this;
     }
+
+
     //  後置演算子
     //  イテレータは加算されるが式を評価すると加算する前の値となる
     My_array_iterator operator ++(int dummy){
@@ -43,6 +48,7 @@ struct My_array_iterator{
         return temp;
     }
 
+
     //  比較演算子
     //  イテレータとイテレータを比較する、戻り値はbool値
     //  引数をconstなリファレンスとする理由は、不要なコピーを防ぐため
@@ -54,6 +60,23 @@ struct My_array_iterator{
         //  引数のデータメンバにアクセス
         return pos != data_arg.pos;
     }
+    bool operator <(My_array_iterator const &data_arg){
+        //  大小比較の結果をbool値で返す
+        return (pos < data_arg.pos);
+    }
+    bool operator <=(My_array_iterator const &data_arg){
+        //  大小比較の結果をbool値で返す
+        return (pos <= data_arg.pos);
+    }
+    bool operator >(My_array_iterator const &data_arg){
+        //  大小比較の結果をbool値で返す
+        return (pos > data_arg.pos);
+    }
+    bool operator >=(My_array_iterator const &data_arg){
+        //  大小比較の結果をbool値で返す
+        return (pos >= data_arg.pos);
+    }
+
 
     //  イテレータに対する加算代入演算子
     //  イテレータに対する値の書き換えを実施するため、戻り値はmy_array_iterator &になる
@@ -65,12 +88,37 @@ struct My_array_iterator{
     }
     //  加算演算子
     //  メンバ関数として演算子をオーバーロードした場合、最初のオペランドはクラスオブジェクト、2個目のオブジェクトは第一引数
-    My_array_iterator operator +(std::size_t num_arg){
+    //  データメンバ（*this）を変更しないため関数をconstにできる
+    My_array_iterator operator +(std::size_t num_arg) const{
         My_array_iterator temp = *this;     //  *thisはクラスオブジェクトへのリファレンス（つまりポインタ？）
         temp += num_arg;
         return temp;
     }
+    
+
+    //  減算代入演算子
+    My_array_iterator & operator -=(std::size_t num_arg){
+        pos -= num_arg;
+        return *this;
+    }
+    //  データメンバ（*this）を変更しないため関数をconstにできる
+    My_array_iterator operator -(std::size_t num_arg) const{
+        //  自分自身（*this）に変更なし
+        My_array_iterator temp = *this;
+        temp -= num_arg;
+        return temp;
+    }
+
+
+    //  アクセス演算子
+    //  イテレータが指す実体を返す演算子なので戻り値はArray::reference
+    typename Array::reference operator [](std::size_t num_arg){
+        //  受け取るのはクラスオブジェクトへのリファレンスとstd::size_t
+        //  既にオーバーロードした*を使用してArray::referenceを返している
+        return *(*this + num_arg);
+    }
 };
+
 
 //  class template
 template <typename T, std::size_t N>
@@ -79,6 +127,7 @@ struct My_array{
     //  データメンバ
     T data[N] = {};
 
+
     //  エイリアス
     using data_type = T;
     using data_size = std::size_t;
@@ -86,10 +135,12 @@ struct My_array{
     using const_reference = T const &;
     using iterator = My_array_iterator<My_array>;
 
+
     //  演算子オーバーロード
     reference operator [](data_size num){
         return data[num];
     }
+
 
     //  メンバ関数
     //  クラス名に()を付けてコンストラクタを呼び出した後のオブジェクトを返している
@@ -100,6 +151,7 @@ struct My_array{
         return iterator(*this, N);
     }
 };
+
 
 //  test
 int main(){
@@ -134,7 +186,7 @@ int main(){
     flg = (iter_l != iter_r);
     std::cout << flg << std::endl;      //  true
 
-    for(auto iter = data.begin(); iter != data.end(); ++iter) std::cout << *iter << " "s;
+    for(auto iter = data.begin(); iter != data.end(); ++iter) std::cout << *iter << " "s;   //  1 2 3
     std::cout << std::endl;
 
     auto iter4 = data.begin();
@@ -143,6 +195,16 @@ int main(){
 
     auto iter5 = data.begin() + 1;
     std::cout << *iter5 << std::endl;   //  2
+
+    auto iter6 = data.begin();
+    std::cout << iter6[1] << std::endl;  //  2
+
+    auto iter7 = data.begin();
+    auto iter8 = data.end();
+    std::cout << (iter7 < iter8) << std::endl;  //  true
+    std::cout << (iter7 <= iter8) << std::endl;  //  true
+    std::cout << (iter7 > iter8) << std::endl;  //  true
+    std::cout << (iter7 >= iter8) << std::endl;  //  true
 
     return 0;
 }
