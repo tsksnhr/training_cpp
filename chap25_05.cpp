@@ -5,11 +5,11 @@ template <typename Array>
 struct My_array_iterator{
 
     //  データメンバ
-    Array &data;
+    Array &my_data;
     std::size_t pos;
 
     //  コンストラクタ
-    My_array_iterator(Array &data, std::size_t pos): data(data), pos(pos){
+    My_array_iterator(Array &my_data, std::size_t pos): my_data(my_data), pos(pos){
         // None
     }
 
@@ -17,7 +17,7 @@ struct My_array_iterator{
     //  演算子オーバーロード
     //  配列要素へのリファレンスを返すから戻り値はArray::reference
     typename Array::reference operator *(){
-        return data[pos];
+        return my_data[pos];
     }
 
 
@@ -52,29 +52,29 @@ struct My_array_iterator{
     //  比較演算子
     //  イテレータとイテレータを比較する、戻り値はbool値
     //  引数をconstなリファレンスとする理由は、不要なコピーを防ぐため
-    bool operator ==(My_array_iterator const &data_arg){
+    bool operator ==(My_array_iterator const &my_data_arg){
         //  引数のデータメンバにアクセス
-        return pos == data_arg.pos;
+        return pos == my_data_arg.pos;
     }
-    bool operator !=(My_array_iterator const &data_arg){
+    bool operator !=(My_array_iterator const &my_data_arg){
         //  引数のデータメンバにアクセス
-        return pos != data_arg.pos;
+        return pos != my_data_arg.pos;
     }
-    bool operator <(My_array_iterator const &data_arg){
+    bool operator <(My_array_iterator const &my_data_arg){
         //  大小比較の結果をbool値で返す
-        return (pos < data_arg.pos);
+        return (pos < my_data_arg.pos);
     }
-    bool operator <=(My_array_iterator const &data_arg){
+    bool operator <=(My_array_iterator const &my_data_arg){
         //  大小比較の結果をbool値で返す
-        return (pos <= data_arg.pos);
+        return (pos <= my_data_arg.pos);
     }
-    bool operator >(My_array_iterator const &data_arg){
+    bool operator >(My_array_iterator const &my_data_arg){
         //  大小比較の結果をbool値で返す
-        return (pos > data_arg.pos);
+        return (pos > my_data_arg.pos);
     }
-    bool operator >=(My_array_iterator const &data_arg){
+    bool operator >=(My_array_iterator const &my_data_arg){
         //  大小比較の結果をbool値で返す
-        return (pos >= data_arg.pos);
+        return (pos >= my_data_arg.pos);
     }
 
 
@@ -119,28 +119,45 @@ struct My_array_iterator{
     }
 };
 
+//  class template
+//  const_iteratorはイテレータの変更は可能だが参照先の変更ができないイテレータ
+template <typename Array>
+struct My_array_const_iterator{
+
+    //  データメンバ(My_array_const_iterator固有の変数)
+    Array const &my_data;
+    std::size_t const_pos;
+
+    //  コンストラクタ
+    //  constなArrayを引数に取るイテレータ
+    My_array_const_iterator(Array const &my_data, std::size_t pos): my_data(my_data), const_pos(pos){
+        // None
+    }
+
+};
+
 
 //  class template
 template <typename T, std::size_t N>
 struct My_array{
 
     //  データメンバ
-    T data[N] = {};
+    T my_data[N] = {};
 
 
     //  エイリアス
-    using data_type = T;
-    using data_size = std::size_t;
+    using my_data_type = T;
+    using my_data_size = std::size_t;
     using reference = T &;
     using const_reference = T const &;
+    //  イテレータのエイリアス
     using iterator = My_array_iterator<My_array>;
-
+    using const_iterator = My_array_const_iterator<My_array>;
 
     //  演算子オーバーロード
-    reference operator [](data_size num){
-        return data[num];
+    reference operator [](my_data_size num){
+        return my_data[num];
     }
-
 
     //  メンバ関数
     //  クラス名に()を付けてコンストラクタを呼び出した後のオブジェクトを返している
@@ -150,30 +167,46 @@ struct My_array{
     iterator end(){
         return iterator(*this, N);
     }
+
+    //  const_iterator版
+    //  constなarrayから呼び出された場合
+    const_iterator beign() const{
+        return const_iterator(*this, 0);
+    }
+    const_iterator end() const{
+        return const_iterator(*this, N);
+    }
+    //  arrayから直接const_iteratorを呼び出す場合
+    const_iterator cbegin(){
+        return const_iterator(*this, 0);
+    }
+    const_iterator cend(){
+        return const_iterator(*this, N);
+    }
 };
 
 
 //  test
 int main(){
 
-    My_array<int, 3> data = {1,2,3};
+    My_array<int, 3> my_data = {1,2,3};
 
-    auto iter1 = data.begin();
+    auto iter1 = my_data.begin();
     std::cout << *iter1 << std::endl;    // 1
 
     ++iter1;
     std::cout << *iter1 << std::endl;    //  2
 
-    auto iter2 = data.end();
+    auto iter2 = my_data.end();
     --iter2;
     std::cout << *iter2 << std::endl;    // 3
 
-    auto iter3 = data.begin();
+    auto iter3 = my_data.begin();
     std::cout << *(iter3++) << std::endl;   //  1
     std::cout << *(iter3++) << std::endl;   //  2
 
-    auto iter_l = data.begin();
-    auto iter_r = data.begin();
+    auto iter_l = my_data.begin();
+    auto iter_r = my_data.begin();
     std::cout << std::boolalpha;
     bool flg;
     flg = (iter_l == iter_r);
@@ -186,25 +219,29 @@ int main(){
     flg = (iter_l != iter_r);
     std::cout << flg << std::endl;      //  true
 
-    for(auto iter = data.begin(); iter != data.end(); ++iter) std::cout << *iter << " "s;   //  1 2 3
+    for(auto iter = my_data.begin(); iter != my_data.end(); ++iter) std::cout << *iter << " "s;   //  1 2 3
     std::cout << std::endl;
 
-    auto iter4 = data.begin();
+    auto iter4 = my_data.begin();
     iter4 += 2;
     std::cout << *iter4 << std::endl;   //  3
 
-    auto iter5 = data.begin() + 1;
+    auto iter5 = my_data.begin() + 1;
     std::cout << *iter5 << std::endl;   //  2
 
-    auto iter6 = data.begin();
+    auto iter6 = my_data.begin();
     std::cout << iter6[1] << std::endl;  //  2
 
-    auto iter7 = data.begin();
-    auto iter8 = data.end();
+    auto iter7 = my_data.begin();
+    auto iter8 = my_data.end();
     std::cout << (iter7 < iter8) << std::endl;  //  true
     std::cout << (iter7 <= iter8) << std::endl;  //  true
     std::cout << (iter7 > iter8) << std::endl;  //  true
     std::cout << (iter7 >= iter8) << std::endl;  //  true
+
+    auto iter9 = my_data.cbegin();
+    //  演算子オーバーロード未実装
+    std::cout << *iter9 << std::endl; 
 
     return 0;
 }
